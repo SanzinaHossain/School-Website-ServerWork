@@ -1,5 +1,5 @@
 const express = require('express')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors =require('cors');
 require('dotenv').config();
 
@@ -31,6 +31,37 @@ async function run(){
           const result=await galleryCollection.insertOne(galleryx);
           res.send(result);
         })
+        //gallery item delete delete
+        app.delete('/gallerydata/:id', async(req,res)=>{
+          const id = req.params.id;
+          const query={_id:ObjectId(id)};
+          const result=await galleryCollection.deleteOne(query);
+          res.send(result)
+      })
+       //get particular gallery data
+       app.get('/gallerydata/:id',async(req,res)=>{ 
+        const id=req.params.id;
+        const query={_id:ObjectId(id)};
+        const collect=await galleryCollection.findOne(query);
+        res.send(collect);
+    })
+      //update gallery
+      app.put('/gallerydata/:id',async(req,res)=>{
+        const id = req.params.id;
+        const gallery=req.body;
+        const query = {_id: ObjectId(id)};
+        const collect=await galleryCollection.findOne(query);
+        if(collect){
+        const result= await galleryCollection.updateOne(query,
+          {
+            $set:{
+              img:gallery.img,
+              description:gallery.description
+            }
+          });
+        res.send(result);
+        }
+      })
          console.log("database connected")
   }
   finally{
