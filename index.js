@@ -17,12 +17,20 @@ async function run(){
   try{
          await client.connect();
          const galleryCollection=client.db('gallery').collection('gallerydata');
+         //get gallery data
          app.get('/gallerydata',async (req,res)=>{
             const query={};
             const cursor=galleryCollection.find(query)
             const gallery= await cursor.toArray()
             res.send(gallery)
          })
+         //add new gallery data
+         app.post('/gallerydata',async(req,res)=>{
+          const galleryx=req.body;
+          console.log(galleryx)
+          const result=await galleryCollection.insertOne(galleryx);
+          res.send(result);
+        })
          console.log("database connected")
   }
   finally{
