@@ -17,6 +17,7 @@ async function run(){
   try{
          await client.connect();
          const galleryCollection=client.db('gallery').collection('gallerydata');
+         const contactCollection=client.db('Contact').collection('usercontact');
          //get gallery data
          app.get('/gallerydata',async (req,res)=>{
             const query={};
@@ -31,7 +32,7 @@ async function run(){
           const result=await galleryCollection.insertOne(galleryx);
           res.send(result);
         })
-        //gallery item delete delete
+        //gallery item delete
         app.delete('/gallerydata/:id', async(req,res)=>{
           const id = req.params.id;
           const query={_id:ObjectId(id)};
@@ -61,6 +62,20 @@ async function run(){
           });
         res.send(result);
         }
+      })
+      //get all contact
+      app.get('/usercontact',async (req,res)=>{
+        const query={};
+        const cursor=contactCollection.find(query)
+        const contact= await cursor.toArray()
+        res.send(contact)
+     })
+       //add new contact message
+       app.post('/usercontact',async(req,res)=>{
+        const contact=req.body;
+        console.log(contact)
+        const result=await contactCollection.insertOne(contact);
+        res.send(result);
       })
          console.log("database connected")
   }
