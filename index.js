@@ -18,6 +18,7 @@ async function run(){
          await client.connect();
          const galleryCollection=client.db('gallery').collection('gallerydata');
          const contactCollection=client.db('Contact').collection('usercontact');
+         const noticeCollection=client.db('notice').collection('allnotice');
          //get gallery data
          app.get('/gallerydata',async (req,res)=>{
             const query={};
@@ -77,6 +78,20 @@ async function run(){
         const result=await contactCollection.insertOne(contact);
         res.send(result);
       })
+       //get notice data
+       app.get('/allnotice',async (req,res)=>{
+        const query={};
+        const cursor=noticeCollection.find(query)
+        const notice= await cursor.toArray()
+        res.send(notice)
+     })
+      //notice item delete
+      app.delete('/allnotice/:id', async(req,res)=>{
+        const id = req.params.id;
+        const query={_id:ObjectId(id)};
+        const result=await noticeCollection.deleteOne(query);
+        res.send(result)
+    })
          console.log("database connected")
   }
   finally{
