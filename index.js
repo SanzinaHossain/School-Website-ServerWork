@@ -92,6 +92,12 @@ async function run(){
         const result=await noticeCollection.deleteOne(query);
         res.send(result)
     })
+    //add new notice 
+    app.post('/allnotice',async(req,res)=>{
+      const notice=req.body;
+      const result=await noticeCollection.insertOne(notice);
+      res.send(result);
+    })
          console.log("database connected")
   }
   finally{
