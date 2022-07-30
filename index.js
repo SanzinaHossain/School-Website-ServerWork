@@ -98,6 +98,24 @@ async function run(){
       const result=await noticeCollection.insertOne(notice);
       res.send(result);
     })
+    //update notice
+    app.put('/allnotice/:id',async(req,res)=>{
+      const id = req.params.id;
+      const notice=req.body;
+      const query = {_id: ObjectId(id)};
+      const collect=await noticeCollection.findOne(query);
+      if(collect){
+      const result= await noticeCollection.updateOne(query,
+        {
+          $set:{
+            date:notice.date,
+            noticelink:notice.noticelink,
+            tittle:notice.tittle
+          }
+        });
+      res.send(result);
+      }
+    })
          console.log("database connected")
   }
   finally{
